@@ -23,16 +23,11 @@ class minStartingIndex {
 
             if (s.charAt(i) != pattern.charAt(j)) {
                 almostCnt++;
-                //System.out.println("MISTAKE #" + almostCnt + " (" + s.charAt(i) + " != " + pattern.charAt(j) + ")");
             }
 
             if (almostCnt > 1) {
-                System.out.println("MISTAKE DETECTED\ni = " + i + "\tj = " + j);
-                System.out.println("L[T[i]] = " + arrL[s.charAt(i) - 'a'] + "\tS[j] = " + arrS[j]);
-                System.out.println( i + " + " + pLen + " + " + Math.min(arrL[s.charAt(i) - 'a'], arrS[j]));
                 i = i + pLen - Math.min(arrL[s.charAt(i) - 'a'], arrS[j]);
                 j = pLen;
-                System.out.println("NEW\ni = " + i + "\tj = " + j);
                 almostCnt = 0;
                 continue;
             }
@@ -80,9 +75,7 @@ class minStartingIndex {
                 for (j = -1; j + m - i >= 1; j--) {                    
                     String prefix = pattern.substring(0, j + m - i);
                     String suffix = pattern.substring(i - j);
-                    System.out.println("Prefix: " + prefix + "\tSuffix: " + suffix);
                     if (prefix.equals(suffix)) {
-                        System.out.println("MATCH! Value: " + j);
                         suffixSkip[i] = j;
                         break;
                     }
@@ -91,7 +84,6 @@ class minStartingIndex {
                 suffixSkip[i] = j;
             }
         }
-        System.out.println("Suffix skip: \n" + Arrays.toString(suffixSkip));
         return suffixSkip;
     }
 
