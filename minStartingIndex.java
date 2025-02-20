@@ -18,26 +18,26 @@ class minStartingIndex {
 
         System.out.println("" + s + "\n" + pattern);
         while (i < s.length() && j >= 0) {
-            System.out.println(i + " to " + j);
+            //System.out.println(i + " to " + j);
+            
+
             if (s.charAt(i) != pattern.charAt(j)) {
                 almostCnt++;
-                System.out.println("MISTAKE #" + almostCnt + " (" + s.charAt(i) + " != " + pattern.charAt(j) + ")");
-                if (almostCnt > 1) {
-                    System.out.println("Last occurence at s[i] = " + s.charAt(i) + ": " + arrL[s.charAt(i) - 'a']);
-                    System.out.println("Suffix skip for pattern[j] " + arrS[j]);
-                    System.out.println("i:" + i + "\tj:" + j + "\tSelected: " + Math.min(arrL[s.charAt(i) - 'a'], arrS[j]));
-
-                    i = i + pLen - Math.min(arrL[s.charAt(i) - 'a'], arrS[j]);
-                    System.out.println("NEW INDEX: " + i + "\t FURTHEST INDEX: " + (s.length() - 1));
-                    j = pLen;
-                    almostCnt = 0;
-                }
-                i--;
-                j--;
-            } else {
-                i--;
-                j--;
+                //System.out.println("MISTAKE #" + almostCnt + " (" + s.charAt(i) + " != " + pattern.charAt(j) + ")");
             }
+
+            if (almostCnt > 1) {
+                System.out.println("MISTAKE DETECTED\ni = " + i + "\tj = " + j);
+                System.out.println("L[T[i]] = " + arrL[s.charAt(i) - 'a'] + "\tS[j] = " + arrS[j]);
+                System.out.println( i + " + " + pLen + " + " + Math.min(arrL[s.charAt(i) - 'a'], arrS[j]));
+                i = i + pLen - Math.min(arrL[s.charAt(i) - 'a'], arrS[j]);
+                j = pLen;
+                System.out.println("NEW\ni = " + i + "\tj = " + j);
+                almostCnt = 0;
+                continue;
+            }
+            i--;
+            j--;
         }
 
         return (j == -1) ? (i + 1) : -1;
@@ -76,21 +76,19 @@ class minStartingIndex {
 
             // This condition allows for the assumption of negative indices
             if (!found) {
-                //suffixSkip[i] = i - (m - 2);
-                int j = 1;
-                for (j = 1; i + 1 + j < m; j++) {
-
-                    //System.out.println("Suffix: " + pattern.substring(i + 1 + j) + "\tPrefix: " + pattern.substring(0, m - (i + 1) - j));
-                    if (pattern.substring(i + 1 + j).equals(pattern.substring(0, (m - (i + 1) - j)))) {
-                        //System.out.println("Prefix and suffix math! Assigning value " + -j);
-                        suffixSkip[i] = -j;
-                        found = true;
+                int j = -1;
+                for (j = -1; j + m - i >= 1; j--) {                    
+                    String prefix = pattern.substring(0, j + m - i);
+                    String suffix = pattern.substring(i - j);
+                    System.out.println("Prefix: " + prefix + "\tSuffix: " + suffix);
+                    if (prefix.equals(suffix)) {
+                        System.out.println("MATCH! Value: " + j);
+                        suffixSkip[i] = j;
                         break;
                     }
+                    
                 }
-                if (!found) {
-                    suffixSkip[i] = -j;
-                }
+                suffixSkip[i] = j;
             }
         }
         System.out.println("Suffix skip: \n" + Arrays.toString(suffixSkip));
@@ -100,11 +98,12 @@ class minStartingIndex {
     public static void main(String[] args) {
         minStartingIndex solution = new minStartingIndex();
 
+        /** 
         String s1 = "ababbababa";
         String pattern1 = "bacaba";
         int result1 = solution.minStartingIndex(s1, pattern1);
         System.out.println("Test case 1: " + result1 + "\n");
-
+        */
         String s2 = "abcdefg";
         String pattern2 = "bcdffg";
         int result2 = solution.minStartingIndex(s2, pattern2);
